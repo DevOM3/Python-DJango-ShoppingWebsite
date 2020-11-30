@@ -1,0 +1,266 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} ShopSite - Checkout {% endblock %}
+{% block css %}
+@import url("https://fonts.googleapis.com/css?family=Hind:400,700");
+html, body {
+font-family: 'Hind', sans-serif;
+margin: 0;
+padding: 0;
+background-color: whitesmoke;
+width: 100%;
+height: 100%;
+}
+
+img {
+max-width: 100%;
+height: auto;
+display: block;
+}
+
+h3 {
+text-align: center;
+font-weight: 400;
+margin-bottom: 0;
+}
+
+.carousel-wrapper {
+position: relative;
+width: 80%;
+height: 75%;
+top: 40%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #FFFFFF;
+background-image: linear-gradient(#FFFFFF 50%, #FFFFFF 50%, #F0F3FC 50%);
+box-shadow: 0px 12px 39px -19px rgba(0, 0, 0, 0.75);
+overflow: hidden;
+}
+.carousel-wrapper .carousel {
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+width: 100%;
+height: auto;
+}
+.carousel-wrapper .carousel .carousel-cell {
+padding: 10px;
+background-color: #FFFFFF;
+width: 20%;
+height: auto;
+min-width: 120px;
+margin: 0 20px;
+transition: transform 500ms ease;
+}
+.carousel-wrapper .carousel .carousel-cell .more {
+display: block;
+opacity: 0;
+margin: 5px 0 15px 0;
+text-align: center;
+font-size: 10px;
+color: #CFCFCF;
+text-decoration: none;
+transition: opacity 300ms ease;
+}
+.carousel-wrapper .carousel .carousel-cell .more:hover, .carousel-wrapper .carousel .carousel-cell .more:active,
+.carousel-wrapper .carousel .carousel-cell .more:visited, .carousel-wrapper .carousel .carousel-cell .more:focus {
+color: #CFCFCF;
+text-decoration: none;
+}
+.carousel-wrapper .carousel .carousel-cell .line {
+position: absolute;
+width: 2px;
+height: 0;
+background-color: black;
+left: 50%;
+margin: 5px 0 0 -1px;
+transition: height 300ms ease;
+display: block;
+}
+.carousel-wrapper .carousel .carousel-cell .price {
+position: absolute;
+font-weight: 700;
+margin: 45px auto 0 auto;
+left: 50%;
+transform: translate(-50%);
+opacity: 0;
+transition: opacity 300ms ease 300ms;
+}
+.carousel-wrapper .carousel .carousel-cell .price sup {
+top: 2px;
+position: absolute;
+}
+.carousel-wrapper .carousel .carousel-cell.is-selected {
+transform: scale(1.2);
+}
+.carousel-wrapper .carousel .carousel-cell.is-selected .line {
+height: 35px;
+}
+.carousel-wrapper .carousel .carousel-cell.is-selected .price, .carousel-wrapper .carousel .carousel-cell.is-selected
+.more {
+opacity: 1;
+}
+.carousel-wrapper .flickity-page-dots {
+display: none;
+}
+.carousel-wrapper .flickity-viewport, .carousel-wrapper .flickity-slider {
+overflow: visible;
+}
+
+{% endblock %}
+{% block body %}
+<div class="container my-5">
+    <h1 class="mb-3 mt-4">Billing address</h1>
+    <form class="needs-validation" method="POST" action="/shop/checkout/" novalidate>{% csrf_token %}
+      <div class="row">
+        <input type="hidden" id="items" name="items" value="">
+        <div class="col-md-6 mb-4">
+          <input type="text" class="form-control" id="firstName" name="fname" placeholder="First name" value="" required>
+          <div class="invalid-feedback">
+            Valid first name is required.
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <input type="text" class="form-control" id="lastName" name="lname" placeholder="Last name" value="" required>
+          <div class="invalid-feedback">
+            Valid last name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <input type="email" class="form-control" id="email" name="email" placeholder="E-mail : you@example.com">
+        <div class="invalid-feedback">
+          Please enter a valid email address for shipping updates.
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <input type="tel" class="form-control" id="ph" name="ph" placeholder="Ph. no.">
+        <div class="invalid-feedback">
+          Please enter a valid email address for shipping updates.
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <input type="text" class="form-control" id="address" name="address" placeholder="Full Address" required>
+        <div class="invalid-feedback">
+          Please enter your shipping address.
+        </div>
+      </div>
+
+      <div class="row">  
+        <div class="col-md-4 mb-4">
+            <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+            <div class="invalid-feedback">
+              City name required.
+            </div>
+          </div>
+        <div class="col-md-4 mb-4">
+            <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+            <div class="invalid-feedback">
+              State name required.
+            </div>
+          </div>      
+        <div class="col-md-4 mb-4">
+          <input type="text" class="form-control" id="zip" name="zipcode" placeholder="Zipcode" required>
+          <div class="invalid-feedback">
+            Zip code required.
+          </div>
+        </div>
+      </div>
+      <hr class="mb-4">
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+    </form>
+    <hr class="my-5">
+</div>
+
+<div class="container display-2">Your Products</div>
+
+<span id="no_items">
+<link rel="stylesheet" href="https://unpkg.com/flickity@2.0/dist/flickity.min.css">
+<script src="https://unpkg.com/flickity@2.0/dist/flickity.pkgd.min.js"></script>
+
+<div class="carousel-wrapper my-5">
+    <div class="carousel" data-flickity>
+        {% for product in products %}
+        <div class="carousel-cell">
+            <span id="card{{product.id}}">
+            </span>
+        </div>
+        {% endfor %}
+      </div>
+</div>
+</span>
+{% endblock %}
+
+{% block js %}
+<script>
+
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+      document.getElementById('no_items').innerHTML = "<div class='container alert alert-warning' role='alert'><h1>You don't have any product in the Cart go ahead and <a href='/shop' class='alert-link'>Add a new one</a> to Checkout!!!</h1><div>"
+    }
+    else {
+      cart = JSON.parse(localStorage.getItem('cart'));
+      document.getElementById('cart').innerHTML = Object.keys(cart).length;
+      show(cart);
+      updatecart(cart);
+    }
+
+    $('.divpr').on('click', 'button.cart', function () {
+      var idstr = this.id.toString();
+      if (cart[idstr] != undefined) {
+        cart[idstr] = cart[idstr] + 1;
+      }
+      else {
+        cart[idstr] = 1;
+      }
+      updatecart(cart);
+      
+    });
+
+    function show(cart) {
+        {% for product in products %}
+        if("prod" + "{{product.id}}" in cart){
+            document.getElementById('card{{product.id}}').innerHTML = '<h3>{{product.prod_name}}</h3><img src="/media/{{product.prod_image}}" /><div class="more"><span id="{{product.id}}" class="divpr"><button type="button" id="prod{{product.id}}" class="btn btn-primary btn-md cart">Add to Cart</button></span><a href="/shop/product_view/{{product.id}}"><button type="button" id="view{{product.id}}" class="btn btn-primary btn-md">View</button></a></div><div class="line"></div><div class="price"><span>{{product.prod_price}}<sup>₹</sup></span></div>';
+        }
+        {% endfor %}
+    }
+
+    function updatecart(cart) {
+      var item_sum = 0
+      for (var item in cart){
+        item_sum = item_sum + cart[item];
+        var id = item.slice(4, );
+        document.getElementById(id).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "''><b style='color: black;'>" + cart[item] + "</b></span> <button id='plus" + item + "' class='btn btn-primary plus'> + </button>";
+        if (cart[item] == 0){
+          document.getElementById(id).innerHTML = '<button type="button" id="' + item + '" class="btn btn-primary btn-md cart">Add to Cart</button>';
+        }
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      document.getElementById('cart').innerHTML = item_sum;
+    }
+
+    $('.divpr').on('click', 'button.minus', function (){
+      var prodid = this.id.slice(5, );
+      if (cart[prodid] > 0){
+        cart[prodid] = cart[prodid] - 1; 
+        document.getElementById('val' + prodid).innerHTML = "<b style='color: black;'>" + cart[prodid] + "</b>";
+        updatecart(cart);
+      }
+    })
+    $('.divpr').on('click', 'button.plus', function (){
+      var prodid = this.id.slice(4, );
+      cart[prodid] = cart[prodid] + 1;
+      document.getElementById('val' + prodid).innerHTML = "<b style='color: black;'>" + cart[prodid] + "</b>";
+      updatecart(cart);
+    })
+    $('#items').val(JSON.stringify(cart));
+    {% if thank %}
+    localStorage.clear();
+    alert("Order placed Sucessfully !!!\nTrack it using order id : {{id}}");
+    document.location = '/shop';
+    {% endif %}
+  </script>
+{% endblock %}
